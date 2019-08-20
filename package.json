@@ -1,0 +1,28 @@
+{
+  "name": "vuejs-filterable-datatable",
+  "version": "1.0.0",
+  "description": "The FilterableTable is meant to be the all-in-one datatable that we will be using anywhere. Old tables will slowly be replaced by this table and this will cause us to have one point of maintenance for any given datatable!",
+  "main": "dist/filterable-table.umd.js",
+  "module": "dist/filterable-table.esm.js",
+  "unpkg": "dist/filterable-table.min.js",
+  "scripts": {
+    "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/filterable-table.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/filterable-table.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/filterable-table.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@remykooistra77-github:KakaCarrotCake/vuejs-filterable-datatable.git"
+  },
+  "devDependencies": {
+    "rollup": "^1.17.0",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-vue": "^5.0.1",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "author": "https://github.com/KakaCarrotCake",
+  "license": "MIT"
+}
