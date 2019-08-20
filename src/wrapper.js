@@ -1,11 +1,11 @@
 // Import vue component
-import component from './FilterableTable.vue';
+import FilterableTable from './FilterableTable.vue';
 
 // Declare install function executed by Vue.use()
 export function install(Vue) {
     if (install.installed) return;
     install.installed = true;
-    Vue.component('FilterableTable', component);
+    Vue.use(FilterableTable);
 }
 
 // Create module definition for Vue.use()
@@ -25,4 +25,4 @@ if (GlobalVue) {
 }
 
 // To allow use as module (npm/webpack/etc.) export component
-export default component;
+export default FilterableTable;

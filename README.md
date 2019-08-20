@@ -2,6 +2,22 @@
 The FilterableTable is meant to be the all-in-one datatable that we will be using anywhere.
 Old tables will slowly be replaced by this table and this will cause us to have one point of maintenance for any given datatable!
 
+## How to use
+### Installation
+`npm i --save vuejs-filterable-datatable`
+
+#### Register globally
+add
+
+```
+Vue.component('FilterableTable', require('vuejs-filterable-datatable').default);
+```
+
+in your global javascript file (ie. `app.js`).
+
+#### Module
+`import FilterableTable from 'vuejs-filterable-datatable'`
+
 ## Details
 The FilterableTable comes with the following features:
 - You can configure which keys you want to display (and what the display name is).
