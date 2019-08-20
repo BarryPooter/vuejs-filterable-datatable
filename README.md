@@ -4,19 +4,23 @@ Old tables will slowly be replaced by this table and this will cause us to have 
 
 ## How to use
 ### Installation
-`npm i --save vuejs-filterable-datatable`
+```zsh
+npm i --save vuejs-filterable-datatable
+```
 
 #### Register globally
 add
 
-```
+```javascript
 Vue.component('FilterableTable', require('vuejs-filterable-datatable').default);
 ```
 
 in your global javascript file (ie. `app.js`).
 
 #### Module
-`import FilterableTable from 'vuejs-filterable-datatable'`
+```javascript
+import FilterableTable from 'vuejs-filterable-datatable'
+```
 
 ## Details
 The FilterableTable comes with the following features:
