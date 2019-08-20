@@ -1,6 +1,6 @@
 {
   "name": "vuejs-filterable-datatable",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The FilterableTable is meant to be the all-in-one datatable that we will be using anywhere. Old tables will slowly be replaced by this table and this will cause us to have one point of maintenance for any given datatable!",
   "main": "dist/filterable-table.umd.js",
   "module": "dist/filterable-table.esm.js",
