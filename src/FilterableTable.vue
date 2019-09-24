@@ -89,7 +89,18 @@
             <thead>
             <tr>
                 <th style="width: 10vw;" v-if="shouldHaveLabelColumn">Labels</th>
-                <th :class="{'small-cell' : row.small}" v-for="row in tableKeys">{{ row.display_name }}</th>
+                <th :class="{'small-cell' : row.small}" v-for="row in tableKeys" class="cursor-pointer" @click="handleColumnOrderClick(row.key)">
+                    <template v-if="row.key == state.orderable.key">
+                        <span>{{ row.display_name}}</span>
+                        <span class="icon">
+                            <i class="fa fa-arrow-up" v-if="state.orderable.direction.toLowerCase() == 'asc'"></i>
+                            <i class="fa fa-arrow-down" v-if="state.orderable.direction.toLowerCase() == 'desc'"></i>
+                        </span>
+                    </template>
+                    <template v-else>
+                        {{ row.display_name }}
+                    </template>
+                </th>
                 <th style="width: 5vw" v-if="hasActions">Acties</th>
             </tr>
             </thead>
@@ -205,6 +216,12 @@
                 hiddenPanels : {
                     filterables : false,
                     searchables : false
+                },
+                state : {
+                    orderable: {
+                        key : null,
+                        direction : 'asc'
+                    }
                 }
             }
         },
@@ -246,9 +263,9 @@
                     .then(response => {
                         alert('Het item is verwijderd, ververs de pagina om de veranderingen te zien.');
                     }).catch(exception => {
-                        alert('Er is een fout opgetreden!');
-                        console.error(exception);
-                    });
+                    alert('Er is een fout opgetreden!');
+                    console.error(exception);
+                });
             },
             canActionBeDisplayed(row, action) {
                 if (!action.hasOwnProperty('conditionals')) return true;
@@ -301,6 +318,7 @@
             applyFilters (resources) {
                 let _resources = resources;
                 let _filters = this.filters;
+                let _orderable = this.state.orderable;
 
                 // Apply all filterables.
                 Object.keys(_filters).forEach(key => {
@@ -329,7 +347,24 @@
                         }
                     });
                 });
+
+                _resources.sort(this._sortOrderableByKeyAndDirection);
                 return _resources;
+            },
+            _sortOrderableByKeyAndDirection(a,b) {
+                if (this.state.orderable.direction.toLowerCase() === 'asc') {
+                    if (a[this.state.orderable.key] < b[this.state.orderable.key] )
+                        return -1;
+                    if (a[this.state.orderable.key]  > b[this.state.orderable.key] )
+                        return 1;
+                    return 0;
+                } else {
+                    if (a[this.state.orderable.key] < b[this.state.orderable.key] )
+                        return 1;
+                    if (a[this.state.orderable.key]  > b[this.state.orderable.key] )
+                        return -1;
+                    return 0;
+                }
             },
             previousPage () {
                 if (1 === this.currentProductPage) return;
@@ -342,6 +377,19 @@
             followMaxPossiblePageOnShrink () {
                 if (this.currentProductPage > this.chunkedProductResources.length) {
                     this.currentProductPage = this.chunkedProductResources.length;
+                }
+            },
+            handleColumnOrderClick (columnKey) {
+                this._handleOrderStateSwitch(columnKey);
+            },
+            _handleOrderStateSwitch(columnKey) {
+                if (this.state.orderable.key === columnKey) {
+                    let _direction = this.state.orderable.direction.toLowerCase() === 'asc'
+                        ? 'desc' : 'asc';
+                    Vue.set(this.state.orderable, 'direction', _direction);
+                } else {
+                    Vue.set(this.state.orderable, 'key', columnKey);
+                    Vue.set(this.state.orderable, 'direction', 'asc');
                 }
             }
         },
@@ -366,6 +414,7 @@
             this.searchables.forEach(row => {
                 Vue.set(this.$data.queries, row.key, null);
             });
+            Vue.set(this.state.orderable, 'key', this.idKey);
         }
     }
 </script>
