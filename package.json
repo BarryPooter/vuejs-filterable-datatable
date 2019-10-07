@@ -11,6 +11,7 @@
     "build:es": "rollup --config build/rollup.config.js --format es --file dist/filterable-table.esm.js",
     "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/filterable-table.min.js"
   },
+  "homepage": "https://github.com/KakaCarrotCake/vuejs-filterable-datatable",
   "repository": {
     "type": "git",
     "url": "git@remykooistra77-github:KakaCarrotCake/vuejs-filterable-datatable.git"
