@@ -259,7 +259,7 @@
                 this.redirectWindowToRoute(redirectRoute);
             },
             redirectWindowToRoute (route) {
-                axios.delete(route)
+                axios.get(route, {_method: 'DELETE'})
                     .then(response => {
                         alert('Het item is verwijderd, ververs de pagina om de veranderingen te zien.');
                     }).catch(exception => {
