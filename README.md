@@ -41,9 +41,15 @@ This section will cover all expected and possible data you can pass to the Filte
 This is the property which identifies which key is used for ids in the passed resources.
 It is used primarily in the actions part of the FilterableTable, where an id is appended to appendable routes.
 
-### Resources : Array
+### Resources : Array (either use this or ajaxResourceRoute)
 
 All the records/Objects from that you want to display in the database, keep it as light as possible ;-)
+
+### ajaxResourceRoute : String (Either use this or Resources)
+
+If you want to load your resources through Axios/AJAX instead of passing them to the module, you can use this property.
+Fill in the url/route to get your resources from and the component will fill in the data for you!
+
 
 ### TableKeys : Array
 
