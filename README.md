@@ -224,7 +224,10 @@ return view('Modules.Products.table', [
 ]);
 ```
 
-The blade example (Modules.Products.table):
+### The blade example (Modules.Products.table):
+
+#### Example without AJAX
+
 ```blade
 <filterable-table
     id-key="product_id"
@@ -234,5 +237,18 @@ The blade example (Modules.Products.table):
     :searchables="{{ $searchables }}"
     :conditional-icons="{{ $conditionalIcons }}"
     :actions="{{ $actions }}"
+></filterable-table>
+```
+
+#### Example with AJAX
+```blade
+<filterable-table
+    id-key="product_id"
+    :table-keys="{{ $tableKeys }}"
+    :filterables="{{ $filterables }}"
+    :searchables="{{ $searchables }}"
+    :conditional-icons="{{ $conditionalIcons }}"
+    :actions="{{ $actions }}"
+    ajax-resource-route="{{ route('product.ajax.table-rows') }}"
 ></filterable-table>
 ```

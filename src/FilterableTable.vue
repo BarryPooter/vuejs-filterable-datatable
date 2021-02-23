@@ -1,144 +1,157 @@
 <template>
     <div class="filterable-table">
-        <!-- Item showcount & Trigger buttons -->
-        <div class="level">
-            <div class="level-left">
-                <button class="button is-medium" :class="{'is-primary': hiddenPanels.filterables, 'is-dark': !hiddenPanels.filterables}" v-if="hasFilterables" @click="hiddenPanels.filterables = !hiddenPanels.filterables">
-                    <span class="icon"><i class="fa fa-filter"></i></span>
-                    <span>Filter opties</span>
-                </button>
-            </div>
-            <div class="level-right">
-                <label for="chunkSize" class="is-bold">Aantal weer te geven items</label>
-                <div class="select is-fullwidth">
-                    <select id="chunkSize" v-model="chunkSize">
-                        <option value="50" selected>50</option>
-                        <option value="100">100</option>
-                        <option value="250">250</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <!-- ./ Item showcount & Trigger buttons -->
+		    <!-- AJAX Loading message -->
+		    <div class="columns" v-if="ajaxResourceRoute !== null && state.ajax.loading">
+				    <div class="column">
+						    <div id="loadingBox">
+								    <span class="icon"><i class="fa fa-spinner fa-spin"></i></span>
+								    <span class="is-size-6">De data wordt opgehaald en voorbereid. Dit kan enkele seconden duren.</span>
+						    </div>
+				    </div>
+		    </div>
+		    <!-- ./ AJAX Loading message -->
 
-        <!-- Filterable buttons -->
-        <div class="columns" v-if="hasFilterables" :class="{'is-hidden' : !hiddenPanels.filterables}">
-            <div class="column">
-                <div class="filter-options menu-card">
-                    <button v-for="filterable in filterables" :ref="filterable.refKey || filterable.key" class="button is-light is-medium" @click="toggleFilter(filterable.key, filterable.filterValue, filterable.refKey)">
-                        <span class="icon"><i class="fa fa-toggle-off"></i></span>
-                        <span>{{ filterable.display_name }}</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- ./ Filter buttons -->
+		    <div v-else>
+				    <!-- Item showcount & Trigger buttons -->
+				    <div class="level">
+						    <div class="level-left">
+								    <button class="button is-medium" :class="{'is-primary': hiddenPanels.filterables, 'is-dark': !hiddenPanels.filterables}" v-if="hasFilterables" @click="hiddenPanels.filterables = !hiddenPanels.filterables">
+										    <span class="icon"><i class="fa fa-filter"></i></span>
+										    <span>Filter opties</span>
+								    </button>
+						    </div>
+						    <div class="level-right">
+								    <label for="chunkSize" class="is-bold">Aantal weer te geven items</label>
+								    <div class="select is-fullwidth">
+										    <select id="chunkSize" v-model="chunkSize">
+												    <option value="50" selected>50</option>
+												    <option value="100">100</option>
+												    <option value="250">250</option>
+												    <option value="500">500</option>
+												    <option value="1000">1000</option>
+										    </select>
+								    </div>
+						    </div>
+				    </div>
+				    <!-- ./ Item showcount & Trigger buttons -->
 
-        <!-- Search inputs -->
-        <div class="columns is-multiline" v-if="hasSearchables">
-            <div class="column is-12">
-                <p class="title is-6">Beschikbare zoekvelden</p>
-            </div>
-            <div class="column is-12">
-                <div class="columns">
-                    <div class="column" v-for="searchable in searchables">
-                        <input :type="searchable.hasOwnProperty('type') ? searchable.type : 'text'" class="input" :placeholder="searchable.display_name" v-model="queries[searchable.key]">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- ./ Search inputs -->
+				    <!-- Filterable buttons -->
+				    <div class="columns" v-if="hasFilterables" :class="{'is-hidden' : !hiddenPanels.filterables}">
+						    <div class="column">
+								    <div class="filter-options menu-card">
+										    <button v-for="filterable in filterables" :ref="filterable.refKey || filterable.key" class="button is-light is-medium" @click="toggleFilter(filterable.key, filterable.filterValue, filterable.refKey)">
+												    <span class="icon"><i class="fa fa-toggle-off"></i></span>
+												    <span>{{ filterable.display_name }}</span>
+										    </button>
+								    </div>
+						    </div>
+				    </div>
+				    <!-- ./ Filter buttons -->
 
-        <!-- Textual display count -->
-        <div class="columns">
-            <div class="column">
-                <div class="level">
-                    <div class="level-left">
-                        <p class="is-block">
-                            <span class="icon"><i class="fa fa-filter"></i></span>
-                            Er worden op dit moment <strong>{{ currentProductPageResources.length }}</strong> van de totaal <strong>{{ resourcesWithFilterApplied.length }} </strong><span v-if="resourcesWithFilterApplied.length != resources.length">(<strong>{{ resources.length }}</strong>)</span> items weegegeven.
-                        </p>
-                    </div>
-                    <div class="level-right">
-                        <div class="columns">
-                            <div class="column table-controls">
-                                <div class="columnized">
-                                    <div class="row">
-                                        <button class="button is-light" @click.prevent="currentProductPage = 1">&laquo;</button>
-                                        <button class="button is-light" @click="previousPage()">&lsaquo;</button>
-                                        <input id="pageNumber" type="number" class="input" style="width: 3vw;" v-model="currentProductPage">
-                                        <button class="button is-light" @click="nextPage()">&rsaquo;</button>
-                                        <button class="button is-light" @click.prevent="currentProductPage = chunkedProductResources.length">&raquo;</button>
-                                    </div>
-                                </div>
-                                <div class="columnized textual">
-                                    <p>Pagina <strong>{{ currentProductPage }}</strong> van de <strong>{{ chunkedProductResources.length }}</strong></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- ./ Textual display count -->
+				    <!-- Search inputs -->
+				    <div class="columns is-multiline" v-if="hasSearchables">
+						    <div class="column is-12">
+								    <p class="title is-6">Beschikbare zoekvelden</p>
+						    </div>
+						    <div class="column is-12">
+								    <div class="columns">
+										    <div class="column" v-for="searchable in searchables">
+												    <input :type="searchable.hasOwnProperty('type') ? searchable.type : 'text'" class="input" :placeholder="searchable.display_name" v-model="queries[searchable.key]">
+										    </div>
+								    </div>
+						    </div>
+				    </div>
+				    <!-- ./ Search inputs -->
 
-        <!-- Datatable -->
-        <table class="table is-striped is-fullwidth">
-            <thead>
-            <tr>
-                <th style="width: 10vw;" v-if="shouldHaveLabelColumn">Labels</th>
-                <th :class="{'small-cell' : row.small}" v-for="row in tableKeys" class="cursor-pointer" @click="handleColumnOrderClick(row.key)">
-                    <template v-if="row.key == state.orderable.key">
-                        <span>{{ row.display_name}}</span>
-                        <span class="icon">
+				    <!-- Textual display count -->
+				    <div class="columns">
+						    <div class="column">
+								    <div class="level">
+										    <div class="level-left">
+												    <p class="is-block">
+														    <span class="icon"><i class="fa fa-filter"></i></span>
+														    Er worden op dit moment <strong>{{ currentProductPageResources.length }}</strong> van de totaal <strong>{{ resourcesWithFilterApplied.length }} </strong><span v-if="resourcesWithFilterApplied.length != resources.length">(<strong>{{ resources.length }}</strong>)</span> items weegegeven.
+												    </p>
+										    </div>
+										    <div class="level-right">
+												    <div class="columns">
+														    <div class="column table-controls">
+																    <div class="columnized">
+																		    <div class="row">
+																				    <button class="button is-light" @click.prevent="currentProductPage = 1">&laquo;</button>
+																				    <button class="button is-light" @click="previousPage()">&lsaquo;</button>
+																				    <input id="pageNumber" type="number" class="input" style="width: 3vw;" v-model="currentProductPage">
+																				    <button class="button is-light" @click="nextPage()">&rsaquo;</button>
+																				    <button class="button is-light" @click.prevent="currentProductPage = chunkedProductResources.length">&raquo;</button>
+																		    </div>
+																    </div>
+																    <div class="columnized textual">
+																		    <p>Pagina <strong>{{ currentProductPage }}</strong> van de <strong>{{ chunkedProductResources.length }}</strong></p>
+																    </div>
+														    </div>
+												    </div>
+										    </div>
+								    </div>
+						    </div>
+				    </div>
+				    <!-- ./ Textual display count -->
+
+				    <!-- Datatable -->
+				    <table class="table is-striped is-fullwidth">
+						    <thead>
+						    <tr>
+								    <th style="width: 10vw;" v-if="shouldHaveLabelColumn">Labels</th>
+								    <th :class="{'small-cell' : row.small}" v-for="row in tableKeys" class="cursor-pointer" @click="handleColumnOrderClick(row.key)">
+										    <template v-if="row.key == state.orderable.key">
+												    <span>{{ row.display_name}}</span>
+												    <span class="icon">
                             <i class="fa fa-arrow-up" v-if="state.orderable.direction.toLowerCase() == 'asc'"></i>
                             <i class="fa fa-arrow-down" v-if="state.orderable.direction.toLowerCase() == 'desc'"></i>
                         </span>
-                    </template>
-                    <template v-else>
-                        {{ row.display_name }}
-                    </template>
-                </th>
-                <th style="width: 5vw" v-if="hasActions">Acties</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="row in currentProductPageResources">
-                <td v-if="shouldHaveLabelColumn" v-html="applyLabelConditionsAndGetLabelDOM(row)"></td>
-                <td v-for="keyRow in tableKeys">{{ row[keyRow.key] }}</td>
-                <td v-if="hasActions">
-                    <ul style="margin:0">
-                        <template v-for="action in actions">
-                            <template v-if="action.hasOwnProperty('confirm') && action.confirm">
-                                <li v-if="canActionBeDisplayed(row, action)">
-                                    <a :target="action.target" :title="action.title" @click="executeConfirmable(action, generateActionRoute(action, row))">
+										    </template>
+										    <template v-else>
+												    {{ row.display_name }}
+										    </template>
+								    </th>
+								    <th style="width: 5vw" v-if="hasActions">Acties</th>
+						    </tr>
+						    </thead>
+						    <tbody>
+						    <tr v-for="row in currentProductPageResources">
+								    <td v-if="shouldHaveLabelColumn" v-html="applyLabelConditionsAndGetLabelDOM(row)"></td>
+								    <td v-for="keyRow in tableKeys">{{ row[keyRow.key] }}</td>
+								    <td v-if="hasActions">
+										    <ul style="margin:0">
+												    <template v-for="action in actions">
+														    <template v-if="action.hasOwnProperty('confirm') && action.confirm">
+																    <li v-if="canActionBeDisplayed(row, action)">
+																		    <a :target="action.target" :title="action.title" @click="executeConfirmable(action, generateActionRoute(action, row))">
                                         <span class="icon" :class="action.class">
                                             <i :class="action.icon"></i>
                                         </span>
-                                    </a>
-                                </li>
-                            </template>
-                            <template v-else>
-                                <li v-if="canActionBeDisplayed(row, action)">
-                                    <a :href="generateActionRoute(action, row)" :target="action.target" :title="action.title">
+																		    </a>
+																    </li>
+														    </template>
+														    <template v-else>
+																    <li v-if="canActionBeDisplayed(row, action)">
+																		    <a :href="generateActionRoute(action, row)" :target="action.target" :title="action.title">
                                         <span class="icon" :class="action.class">
                                             <i :class="action.icon"></i>
                                         </span>
-                                    </a>
-                                </li>
-                            </template>
-                        </template>
-                    </ul>
-                </td>
-            </tr>
-            <tr v-if="1 > currentProductPageResources.length">
-                <td>There are no existing records.</td>
-            </tr>
-            </tbody>
-        </table>
-        <!-- ./ Datatable -->
+																		    </a>
+																    </li>
+														    </template>
+												    </template>
+										    </ul>
+								    </td>
+						    </tr>
+						    <tr v-if="1 > currentProductPageResources.length">
+								    <td>There are no existing records.</td>
+						    </tr>
+						    </tbody>
+				    </table>
+				    <!-- ./ Datatable -->
+		    </div>
     </div>
 </template>
 
@@ -205,7 +218,11 @@
                 default () {
                     return [];
                 }
-            }
+            },
+		        ajaxResourceRoute: {
+            		type: String,
+				        default: null
+		        }
         },
         data () {
             return {
@@ -221,13 +238,18 @@
                     orderable: {
                         key : null,
                         direction : 'asc'
-                    }
+                    },
+		                ajax : {
+                    		resources : [],
+				                loading: true
+		                }
                 }
             }
         },
         computed : {
             resourcesWithFilterApplied () {
-                return this.applyFilters(this.resources);
+            		let _resources = this.state.ajax.resources.length > 0 ? this.state.ajax.resources : this.resources;
+                return this.applyFilters(_resources);
             },
             chunkedProductResources () {
                 return _.chunk(this.resourcesWithFilterApplied, this.chunkSize);
@@ -415,7 +437,20 @@
                 Vue.set(this.$data.queries, row.key, null);
             });
             Vue.set(this.state.orderable, 'key', this.idKey);
-        }
+        },
+		    beforeMount () {
+        		if (this.ajaxResourceRoute) {
+        				axios.get(this.ajaxResourceRoute)
+				            .catch(exception => {
+				            		alert("Er is iets fout gegaan bij het ophalen van data.");
+				            		console.log(exception);
+						            Vue.set(this.state.ajax, 'loading', false);
+				            }).then(response => {
+				            		Vue.set(this.state.ajax, 'resources', response.data);
+								        Vue.set(this.state.ajax, 'loading', false);
+				            });
+		        }
+		    }
     }
 </script>
 
@@ -475,5 +510,21 @@
         padding: 2rem 1.5rem;
         background: #f5f5f5;
         margin-bottom: 15px;
+    }
+
+    $loading-color: #caf0f8;
+    $loading-color-darkened: #90e0ef;
+    #loadingBox {
+		    flex-grow: 1;
+		    flex-direction: column;
+
+		    width: 100%;
+		    padding: 1.5rem 1rem;
+
+		    background-color: $loading-color;
+		    border: 3px dashed $loading-color-darkened;
+
+		    text-align: center;
+		    font-size: 1.2rem;
     }
 </style>
